@@ -28,6 +28,36 @@ A configuração da função Lambda foi bem direta. Escolhi como runtime a vers�
 
 
 ## Parte 3
+### CloudWatch
+Utilizei esse serviço para rastrear fontes de erros no momento da implementação do pipeline e depois para monitorar o funcionamento correto do pipeline. Por exemplo, em um primeiro momento não estava claro como incluir bibliotecas de terceiros na função Lambda e no job do Glue. Logar os erros foi essencial para rastrear o que deu errado. Dessa forma consegui resolver os problemas que surgiram de forma célere.
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>Página inicial do serviço CloudWatch com alguns indicadores:</td>
+    <td>Temos grupos de log para a função Lambda, o job do Glue e o crawler do Glue:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/CloudWatch_Logs_Dashboard.png" width=480></td>
+    <td width="50%"><img src="docs/images/CloudWatch_Log_Groups.png" width=480></td>
+  </tr>
+  <tr>
+    <td>O painel da função Lambda mostra alguma atividade recente:</td>
+    <td>Podemos acessar a história de execuções da função Lambda:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/CloudWatch_Lambda_Dashboard.png" width=480></td>
+    <td width="50%"><img src="docs/images/CloudWatch_Lambda_Logs.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Cada execução do job do Glue adiciona um novo arquivo com os outputs:</td>
+    <td>E outro arquivo com os erros:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/CloudWatch_Glue_Output.png" width=480></td>
+    <td width="50%"><img src="docs/images/CloudWatch_Glue_Error.png" width=480></td>
+  </tr>
+</table>
+
 ### CloudTrail
 <table width="100%">
   <tbody>
