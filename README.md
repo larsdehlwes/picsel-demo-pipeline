@@ -7,12 +7,18 @@ Como o desafio deixou bastante liberdade a respeito dos dados utilizados, decidi
 implementar os pipelines de dados que constumo implementar em servidores dedicados de forma serverless
 também. É o meu primeiro projeto AWS e tem sido uma experiência bastante enriquecedora.
 
+## Conteúdo do repositório
+- Código da função lambda: [```download_ERA5.py```](Lambda/download_ERA5.py) (Runtime: Python 3.11)
+- Código fonte adaptado da biblioteca ```cdsapi``` em formato ```.zip``` para o layer adicional da função Lambda: [```cdsapi_layer.zip```](Lambda/cdsapi_layer.zip) (Para runtime Python 3.11)
+- Código do job AWS Glue: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) (Runtime: Python 3.9)
+- Arquivo wheel para a instalação de bibliotecas adicionais: [```geojsoncontour-0.1-py3-none-any.whl```](Glue/geojsoncontour-0.1-py3-none-any.whl)
+
 ## Resultados
 O pipeline implementado consiste em dois buckets, um bucket para input ```picsel-demo-input``` com acesso restrito e um bucket para output ```picsel-demo-output``` com acesso público de leitura. A função Lambda [```download_ERA5.py```](Lambda/download_ERA5.py) que faz o download dos dados meteorológicos históricos tem como argumentos ```year```, ```month``` e ```day```. Uma vez invocada com argumentos válidos, a função baixa os dados meteorlógicos históricos para a data solicitada e salva o arquivo em formato ```netcdf3``` no input bucket. Como a função dever ter um gatilho manual, executei a função três vezes de forma manual para baixar os dados meteorológicso históricos para três dias diferentes (2023-09-01, 2023-09-02 e 2023-09-03). Exemplo:  O arquivo resultante ```era5land_2023-09-01.nc``` para o dia 2023-09-01 tem um tamanho moderado de 2,8 MB. 
 
 Vale ressaltar que foi necessário adicionar um layer contendo a biblioteca ```cdsapi``` que simplifica o processo de fazer a requisição à API da CDS. Para isso, montei o arquivo [```cdsapi_layer.zip```](Lambda/cdsapi_layer.zip).
 
-Uma vez que populamos o bucket ```picsel-demo-input``` com os arquivos contendo os dados meteorólogicos históricos em formato ```netcdf3```, podemos processá-los. Escolhi utilizar um job escrito em Python 3.9 (a runtime mais recente disponível no AWS Glue) para calcular as linhas de contorno das temperatura média e precipitação total de cada dia, plotá-las com ```matplotlib.pyplot``` e salvá-las em formato ```GeoJSON``` no bucket ```picsel-demo-output```. A transformação das linhas de contorno em formato ```GeoJSON``` nos permite visualizá-las com ferramentas web, como por exemplo ```Leaflet``` ou ```OpenLayers```. Foi necessário disponibilizar ao job algumas bibliotecas como ```geopandas```, ```shapely``` e ```geojson``` de forma manual. O arquivo wheel pode ser encontrado [aqui](Glue/geojsoncontour-0.1-py3-none-any.whl). 
+Uma vez que populamos o bucket ```picsel-demo-input``` com os arquivos contendo os dados meteorólogicos históricos em formato ```netcdf3```, podemos processá-los. Escolhi utilizar um job escrito em Python 3.9 (a runtime mais recente disponível no AWS Glue) [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) para calcular as linhas de contorno das temperatura média e precipitação total de cada dia, plotá-las com ```matplotlib.pyplot``` e salvá-las em formato ```GeoJSON``` no bucket ```picsel-demo-output```. A transformação das linhas de contorno em formato ```GeoJSON``` nos permite visualizá-las com ferramentas web, como por exemplo ```Leaflet``` ou ```OpenLayers```. Foi necessário disponibilizar ao job algumas bibliotecas como ```geopandas```, ```shapely``` e ```geojson``` de forma manual. O arquivo wheel pode ser encontrado [aqui](Glue/geojsoncontour-0.1-py3-none-any.whl). 
 
 Confira os resultados abaixo.
 <table width="100%">
