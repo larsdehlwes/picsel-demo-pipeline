@@ -76,9 +76,9 @@ A configuração da função Lambda foi bem direta. Escolhi como runtime a vers�
 - [x] Escolha uma runtime, como Python 3.x. **Runtime escolhida: 3.11**
 - [x] A função deve ter um gatilho de execução manual. **Executamos a função de forma manual, com argumentos escolhidos por nós.**
 - [x] Atribua a função a um papel com permissões adequadas para interagir com o Amazon S3 e o AWS Glue, se necessário. **Papel criado: "downloadERA"**
-- [x] Configure um bucket no Amazon S3: **Bucket: "picsel-demo-input"**
-- [x] Nome do bucket: "seu-nome-bucket". **Para adequar o nome à função do projeto, mudei o nome do bucket para "picsel-demo-input"**
-- [x] Configure permissões de acesso para que o bucket seja público (somente leitura). **Bucket público: "picsel-demo-output". Confira os plots na seção [Resultados](#resultados)**
+- [x] Configure um bucket no Amazon S3: **Bucket: "picsel-demo-output"**
+- [x] Nome do bucket: "seu-nome-bucket". **Para adequar o nome à função do projeto, mudei o nome do bucket para "picsel-demo-output"**
+- [x] Configure permissões de acesso para que o bucket seja público (somente leitura). **Bucket público: "picsel-demo-output". Confira o acesso público aqui: https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/temperature_contours_2023-09-01.png**
 
 ## Documentação: Parte 2
 
