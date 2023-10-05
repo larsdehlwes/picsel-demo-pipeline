@@ -5,10 +5,10 @@ Nesse desafio configuramos dois S3 buckets, um privado e um com acesso público 
 ## Introdução
 Como o desafio deixou bastante liberdade a respeito dos dados utilizados, decidi usá-lo para mostrar que consigo
 implementar os pipelines de dados que constumo implementar em servidores dedicados de forma serverless
-também. É o meu primeiro projeto AWS e tem sido uma experiência bastante enriquecedora.
+também.
 
 ## Conteúdo do repositório
-- Código da função lambda: [```download_ERA5.py```](Lambda/download_ERA5.py) (Runtime: Python 3.11)
+- Código da função Lambda: [```download_ERA5.py```](Lambda/download_ERA5.py) (Runtime: Python 3.11)
 - Código fonte adaptado da biblioteca ```cdsapi``` em formato ```.zip``` para o layer adicional da função Lambda: [```cdsapi_layer.zip```](Lambda/cdsapi_layer.zip) (Para runtime Python 3.11)
 - Código do job AWS Glue: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) (Runtime: Python 3.9)
 - Arquivo wheel para a instalação de bibliotecas adicionais: [```geojsoncontour-0.1-py3-none-any.whl```](Glue/geojsoncontour-0.1-py3-none-any.whl)
