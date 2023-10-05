@@ -128,10 +128,37 @@ Como parte deste desafio, criamos dois buckets. Parte 1 pede para criar um bucke
   
 ### AWS Glue Job
 Criamos um AWS Glue job [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) para ler os arquivos em formato binário ```netcdf3``` do bucket ```piscel-demo-input``` , extrair a informação que nos interessa, transformá-la em formato ```.geojson``` e escrever os dados no bucket ```picsel-demo-output```.
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>Criamos um novo AWS Glue Job:</td>
+    <td>Precisamos incluir de forma manual algumas bibliotecas:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/AWS_Glue_Job_Properties.png" width=480></td>
+    <td width="50%"><img src="docs/images/AWS_Glue_Job_Library_Path.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Painel geral do Job:</td>
+    <td>O Job escreve dados em dois diretórios:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/AWS_Glue_Job_Run_Overview.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_Directories.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Por um lado, as linhdas de contorno são gravadas em formato ".geojson"</td>
+    <td>Por outro lado, os plots das linhas de contorno são gravados em formato ".png"</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_Contours_Directory.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_Plots_Directory.png" width=480></td>
+  </tr>
+</table>
 
 ### AWS Glue Crawler
 O nosso AWS Glue job [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) criou arquivos em formato ```JSON``` no bucket ```picsel-demo-output```.
-Podemos utilizar um AWS Glue Crawler para inserir os dados em formato ```JSON``` em um banco de dados SQL.
+Podemos utilizar um AWS Glue Crawler para inserir esses dados em um banco de dados SQL.
 <table width="100%">
   <tbody>
   <tr>
