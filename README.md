@@ -50,6 +50,7 @@ Confira os resultados abaixo.
 </table>
 
 ## Documentação: Parte 1
+### Função Lambda
 A configuração da função Lambda foi bem direta. Escolhi como runtime a versão estável mais recente da Python, a Python 3.11, a qual também utilizo no meu computador pessoal. Pensei bastante em como demonstrar minha capacidade de escrever uma função Lambda e optei por implementar uma função que faz uma requisição a uma API e, em seguida, baixa os dados requeridos para o bucket a ser criado. Para isso, a função lambda precisa de permissões de escrever no bucket em questão.
 <table width="100%">
   <tbody>
@@ -63,11 +64,33 @@ A configuração da função Lambda foi bem direta. Escolhi como runtime a vers�
   </tr>
   <tr>
     <td>A função Lambda tem permissão de escrever log:</td>
-    <td>A função Lambda precisa de acesso ao SecretsManager para descriptografar os credenciais secretos para fazer uma requisição à API. Observe que apenos o segredo relevante é compartilhado com a função: (Criamos a política personalizada ``SecretsManagerReadAccessPicsel'' para isso.)</td>
+    <td>A função Lambda precisa de acesso ao SecretsManager para descriptografar os credenciais secretos para fazer uma requisição à API. Observe que apenos o segredo relevante é compartilhado com a função: (Criamos a política personalizada "SecretsManagerReadAccessPicsel" para isso.)</td>
   </tr>
   <tr>
     <td width="50%"><img src="docs/images/Lambda_Permissions_CloudWatch.png" width=480></td>
     <td width="50%"><img src="docs/images/Lambda_Permissions_SecretsManager.png" width=480></td>
+  </tr>
+</table>
+
+### S3 Bucket Público
+Como parte deste desafio, criamos dois buckets. Parte 1 pede para criar um bucket com acesso público de leitura. Este é o nosso bucket ```piscel-demo-output```.
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>O painel inicial do S3 já mostra que o bucket "picsel-demo-output" é configurado no modo "public".</td>
+    <td>Precimos desativar o modo padrão que bloqueio qualquer tentativa de acesso público.</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/S3_Buckets.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_Blocking_Off.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Em seguida, precisamos permitir explicitamente a leitura de arquivos a usuários anônimos.</td>
+    <td>Essa parte não é obrigatória para muitos casos de uso. Porém, caso queiramos que aplicações web possam baixar os arquivos, é necessário ativar o Cross-Origin Resource Sharing.</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_Policy_PublicRead.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Output_Bucket_CORS.png" width=480></td>
   </tr>
 </table>
 
@@ -81,6 +104,33 @@ A configuração da função Lambda foi bem direta. Escolhi como runtime a vers�
 - [x] Configure permissões de acesso para que o bucket seja público (somente leitura). **Bucket público: "picsel-demo-output". Confira o acesso público aqui: https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/temperature_contours_2023-09-01.png**
 
 ## Documentação: Parte 2
+### S3 Bucket Privado
+Como parte deste desafio, criamos dois buckets. Parte 1 pede para criar um bucket com acesso público de leitura. Este é o nosso bucket ```piscel-demo-output```.
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>O painel inicial do S3 mostra que o bucket "picsel-demo-input" é configurado no modo "privado".</td>
+    <td>Mantemos o modo padrão que bloqueio qualquer tentativa de acesso público.</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/S3_Buckets.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Input_Bucket_Blocking_on.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Também não precisamos adicionar nenhuma permissão adicional.</td>
+    <td>Dessa forma, os dados baixados da API ficam mais seguros dentro do nosso bucket.</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/S3_Input_Bucket_No_Policy.png" width=480></td>
+    <td width="50%"><img src="docs/images/S3_Input_Bucket_Data_Directory.png" width=480></td>
+  </tr>
+</table>
+
+### Checklist
+- [x] Crie um bucket separado no Amazon S3 para armazenar dados processados. **Bucket privado: "picsel-demo-input"**
+- [x] Crie um job no AWS Glue para transformar dados: **Job: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py)**
+- [x] Use um crawler para catalogar os dados do seu bucket no S3 criado anteriormente. 
+- [x] Crie um job que transforme os dados de alguma forma (por exemplo, aplicando uma simples limpeza ou agregação) e armazene o resultado no segundo bucket. **Job: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py). Confira a seção [Resultados](#resultados) para saber mais sobre a transformação dos dados.**
 
 ## Documentação: Parte 3
 ### CloudWatch
