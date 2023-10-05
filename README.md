@@ -125,11 +125,45 @@ Como parte deste desafio, criamos dois buckets. Parte 1 pede para criar um bucke
     <td width="50%"><img src="docs/images/S3_Input_Bucket_Data_Directory.png" width=480></td>
   </tr>
 </table>
+  
+### AWS Glue Job
+Criamos um AWS Glue job [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) para ler os arquivos em formato binário ```netcdf3``` do bucket ```piscel-demo-input``` , extrair a informação que nos interessa, transformá-la em formato ```.geojson``` e escrever os dados no bucket ```picsel-demo-output```.
+
+### AWS Glue Crawler
+O nosso AWS Glue job [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py) criou arquivos em formato ```JSON``` no bucket ```picsel-demo-output```.
+Podemos utilizar um AWS Glue Crawler para inserir os dados em formato ```JSON``` em um banco de dados SQL.
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>Criamos um novo crawler chamado "picsel-demo-crawler":</td>
+    <td>Configuramos o arquivo a ser mapeado: "s://picsel-demo-output/contours/"</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/AWS_Glue_Crawler_Properties.png" width=480></td>
+    <td width="50%"><img src="docs/images/AWS_Glue_Crawler_Data_Source_Details.png width=480></td>
+  </tr>
+  <tr>
+    <td>Atribuimos um papel criado anteriormente para permitir acesso ao serviço S3:</td>
+    <td>Escolhemos o banco de dados no qual a tabela deve ser inserido:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/AWS_Glue_Crawler_IAM_Role.png" width=480></td>
+    <td width="50%"><img src="docs/images/AWS_Glue_Crawler_Output_Configuration" width=480></td>
+  </tr>
+  <tr>
+    <td>Executamos o crawler e aproximadamente 40s depois podemos consultar os resultados:</td>
+    <td>A tabela contem os dados esperados. Uma coluna contendos os arrays de Features dos FeatureCollections e outra coluna contendo o tipo da estrutura, aqui simplesmente "FeatureCollection". Não é a melhor forma de catalogar os dados ainda. Seria melhor extrair cada Feature, mas vamos deixar essa análise para um trabalho futuro.</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/images/AWS_Glue_Crawler_Run_Overview.png" width=480></td>
+    <td width="50%"><img src="docs/images/AWS_Glue_Table_Contours.png" width=480></td>
+  </tr>
+</table>
 
 ### Checklist
 - [x] Crie um bucket separado no Amazon S3 para armazenar dados processados. **Bucket privado: "picsel-demo-input"**
 - [x] Crie um job no AWS Glue para transformar dados: **Job: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py)**
-- [x] Use um crawler para catalogar os dados do seu bucket no S3 criado anteriormente. 
+- [x] Use um crawler para catalogar os dados do seu bucket no S3 criado anteriormente. **Montamos um crawler que consegue catalogar os FeatureCollections dos arquivos ```.geojson``` que foram gerados.**
 - [x] Crie um job que transforme os dados de alguma forma (por exemplo, aplicando uma simples limpeza ou agregação) e armazene o resultado no segundo bucket. **Job: [```extract_contours_from_netcdf3.py```](Glue/extract_contours_from_netcdf3.py). Confira a seção [Resultados](#resultados) para saber mais sobre a transformação dos dados.**
 
 ## Documentação: Parte 3
