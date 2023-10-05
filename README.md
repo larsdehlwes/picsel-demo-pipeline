@@ -2,7 +2,40 @@
 ## Resumo
 Nesse desafio configuramos dois S3 buckets, um privado e um com acesso público de leitura. Utilizando uma função Lambda baixamos dados (temperatura 2m acima da superfície e precipitação total) de reanálise meteorológica de uma API pública para guardá-los temporariamente em um dos buckets criados. (Observa se, que nesse processo os credenciais para acessar a API são guardados de forma segura dentro do SecretsManager.) Em seguida, utilizamos um Glue Job para processar os dados e extrair as linhas de contorno das temperatura média e precipitação total de cada dia e as salvamos em formato GeoJSON dentro do segundo S3 bucket. Também mostramos como configurar um AWS Glue Crawler para catalogar arquivos nos formatos .csv, .json, etc...
 
+## Introdução
+Como o desafio deixou bastante liberdade a respeito dos dados utilizados, decidi usá-lo para mostrar que consigo
+implementar os pipelines de dados que constumo implementar em servidores dedicados de forma serverless
+também. É o meu primeiro projeto AWS e tem sido uma experiência bastante enriquecedora.
+
 ## Resultados
+O pipeline implementado consiste em dois buckets, um bucket para input com acesso restrito e um bucket para output com acesso público de leitura. 
+<table width="100%">
+  <tbody>
+  <tr>
+    <td>Temperatura média (em °C) 2023-09-01:</td>
+    <td>Precipitação total (em mm) 2023-09-01:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/temperature_contours_2023-09-01.png" width=480></td>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/precipitation_contours_2023-09-01.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Temperatura média (em °C) 2023-09-02:</td>
+    <td>Precipitação total (em mm) 2023-09-02:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/temperature_contours_2023-09-02.png" width=480></td>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/precipitation_contours_2023-09-02.png" width=480></td>
+  </tr>
+  <tr>
+    <td>Temperatura média (em °C) 2023-09-03:</td>
+    <td>Precipitação total (em mm) 2023-09-03:</td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/temperature_contours_2023-09-03.png" width=480></td>
+    <td width="50%"><img src="https://picsel-demo-output.s3.sa-east-1.amazonaws.com/plots/precipitation_contours_2023-09-03.png" width=480></td>
+  </tr>
+</table>
 
 ## Parte 1
 A configuração da função Lambda foi bem direta. Escolhi como runtime a versão estável mais recente da Python, a Python 3.11, a qual também utilizo no meu computador pessoal. Pensei bastante em como demonstrar minha capacidade de escrever uma função Lambda e optei por implementar uma função que faz uma requisição a uma API e, em seguida, baixa os dados requeridos para o bucket a ser criado. Para isso, a função lambda precisa de permissões de escrever no bucket em questão.
